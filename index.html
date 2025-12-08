@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiki Journeys | Your Adventure, Your Way</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --night-deep: #0a0e1a;
+            --night-mid: #141c2e;
+            --night-light: #1e2a42;
+            --wood-dark: #5c3d2e;
+            --wood-mid: #8b5a3c;
+            --wood-light: #c4956a;
+            --wood-glow: #d4a574;
+            --star-gold: #f4d03f;
+            --star-white: #fff8e7;
+            --compass-gold: #e6b84d;
+            --text-cream: #f5f0e6;
+            --text-soft: #c9c4ba;
+            --accent-coral: #e07a5f;
+            --accent-teal: #4a9b8c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--night-deep);
+            color: var(--text-cream);
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* Starfield Background */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--star-white);
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(10, 14, 26, 0.95), transparent);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 14, 26, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--wood-glow);
+            box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+        }
+
+        .logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-cream);
+            letter-spacing: 0.05em;
+        }
+
+        .logo-text span {
+            color: var(--wood-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-soft);
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--compass-gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-cream);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--wood-mid), var(--wood-dark));
+            color: var(--text-cream);
+            padding: 0.8rem 1.8rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 90, 60, 0.3);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 90, 60, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 8rem 4rem 4rem;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 30% 20%, rgba(139, 90, 60, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(74, 155, 140, 0.1) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 50%, rgba(230, 184, 77, 0.05) 0%, transparent 60%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(139, 90, 60, 0.2);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: var(--wood-glow);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.1s backwards;
+        }
+
+        .hero h1 .highlight {
+            color: var(--wood-glow);
+            font-style: italic;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-soft);
+            max-width: 650px;
+            margin: 0 auto 2.5rem;
+            font-weight: 300;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.3s backwards;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--wood-light), var(--wood-mid));
+            color: var(--night-deep);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.03em;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(196, 149, 106, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 35px rgba(196, 149, 106, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-cream);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 0.03em;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(245, 240, 230, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(245, 240, 230, 0.1);
+            border-color: rgba(245, 240, 230, 0.5);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-soft);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--wood-glow);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Section Styling */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 6rem 4rem;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            color: var(--compass-gold);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            color: var(--text-soft);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* Difference Section */
+        .difference {
+            background: linear-gradient(180deg, var(--night-deep) 0%, var(--night-mid) 50%, var(--night-deep) 100%);
+        }
+
+        .difference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .difference-card {
+            background: linear-gradient(145deg, rgba(30, 42, 66, 0.6), rgba(20, 28, 46, 0.8));
+            border: 1px solid rgba(212, 165, 116, 0.15);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .difference-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--wood-light), var(--compass-gold), var(--wood-light));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .difference-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 165, 116, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .difference-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--wood-mid), var(--wood-dark));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(139, 90, 60, 0.3);
+        }
+
+        .card-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--text-cream);
+        }
+
+        .difference-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .difference-card p {
+            color: var(--text-soft);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        /* Services Section */
+        .services {
+            background: var(--night-deep);
+        }
+
+        .services-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .service-tier {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 5rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(30, 42, 66, 0.4), rgba(20, 28, 46, 0.6));
+            border: 1px solid rgba(212, 165, 116, 0.1);
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-tier:nth-child(even) {
+            grid-template-columns: 1.5fr 1fr;
+        }
+
+        .service-tier:nth-child(even) .tier-content {
+            order: -1;
+        }
+
+        .tier-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, var(--wood-light), var(--wood-mid));
+            color: var(--night-deep);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .tier-visual {
+            aspect-ratio: 1;
+            background: linear-gradient(145deg, rgba(139, 90, 60, 0.2), rgba(74, 155, 140, 0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-visual svg {
+            width: 80px;
+            height: 80px;
+            stroke: var(--wood-glow);
+            opacity: 0.8;
+        }
+
+        .tier-visual::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(10, 14, 26, 0.5) 100%);
+        }
+
+        .tier-content h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-tagline {
+            color: var(--compass-gold);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .tier-content p {
+            color: var(--text-soft);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .tier-features {
+            list-style: none;
+        }
+
+        .tier-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-soft);
+            font-size: 0.95rem;
+        }
+
+        .tier-features li svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--accent-teal);
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: linear-gradient(180deg, var(--night-deep) 0%, var(--night-mid) 100%);
+            padding-bottom: 4rem;
+        }
+
+        .contact-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, rgba(30, 42, 66, 0.8), rgba(20, 28, 46, 0.9));
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            border-radius: 30px;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 90, 60, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .contact-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-intro h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .contact-intro p {
+            color: var(--text-soft);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            letter-spacing: 0.03em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: rgba(10, 14, 26, 0.6);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            border-radius: 12px;
+            color: var(--text-cream);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(201, 196, 186, 0.4);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--wood-glow);
+            box-shadow: 0 0 20px rgba(212, 165, 116, 0.15);
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23c9c4ba' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 3rem;
+        }
+
+        .form-group select option {
+            background: var(--night-mid);
+            color: var(--text-cream);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .dream-prompt {
+            background: linear-gradient(135deg, rgba(139, 90, 60, 0.1), rgba(74, 155, 140, 0.05));
+            border: 1px solid rgba(212, 165, 116, 0.15);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dream-prompt h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--wood-glow);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dream-prompt p {
+            color: var(--text-soft);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .form-submit {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .form-submit button {
+            background: linear-gradient(135deg, var(--wood-light), var(--wood-mid));
+            color: var(--night-deep);
+            padding: 1.2rem 3.5rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 25px rgba(196, 149, 106, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-submit button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 40px rgba(196, 149, 106, 0.6);
+        }
+
+        .form-submit button svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .form-submit button:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--night-mid);
+            padding: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand h3 span {
+            color: var(--wood-glow);
+        }
+
+        .footer-brand p {
+            color: var(--text-soft);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-soft);
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--wood-mid);
+            border-color: var(--wood-mid);
+            color: var(--text-cream);
+            transform: translateY(-3px);
+        }
+
+        .footer-links h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--wood-glow);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-soft);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-cream);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(212, 165, 116, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-soft);
+            font-size: 0.85rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--text-cream);
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            nav {
+                padding: 1rem 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-cta {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .hero {
+                padding: 6rem 2rem 4rem;
+            }
+
+            .service-tier {
+                grid-template-columns: 1fr !important;
+                padding: 2rem;
+            }
+
+            .service-tier:nth-child(even) .tier-content {
+                order: 0;
+            }
+
+            .tier-visual {
+                max-height: 250px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-wrapper {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .footer-social {
+                justify-content: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .difference-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Starfield Background -->
+    <div class="starfield" id="starfield"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#" class="logo">
+            <img src="logo.jpg" alt="Tiki Journeys" class="logo-icon" onerror="this.style.display='none'">
+            <span class="logo-text">Tiki <span>Journeys</span></span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#difference">Why Us</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="#contact" class="nav-cta">Start Your Journey</a>
+        <div class="mobile-toggle" id="mobileToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Real People. Real Adventures. Real Service.
+            </div>
+            <h1>Your Journey Deserves a <span class="highlight">Personal Touch</span></h1>
+            <p class="hero-subtitle">We're not just another booking site. We're your travel partners who listen, plan, and craft experiences that match exactly who you are and what you dream.</p>
+            <div class="hero-buttons">
+                <a href="#contact" class="btn-primary">
+                    Plan My Adventure
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#services" class="btn-secondary">
+                    Explore Services
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>EXPLORE</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Difference Section -->
+    <section class="difference" id="difference">
+        <div class="section-header">
+            <span class="section-label">The Tiki Difference</span>
+            <h2 class="section-title">Anyone Can Book Online. We Do So Much More.</h2>
+            <p class="section-subtitle">Same prices as booking yourself, but with a dedicated travel expert who actually cares about your experience.</p>
+        </div>
+        <div class="difference-grid">
+            <div class="difference-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <h3>A Real Person, Every Time</h3>
+                <p>No chatbots. No endless hold music. You'll work with an actual human who remembers your preferences, understands your needs, and genuinely wants your trip to be amazing.</p>
+            </div>
+            <div class="difference-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                </div>
+                <h3>Your Time, Protected</h3>
+                <p>Skip the hours of research, comparison shopping, and second-guessing. We've already done the homework so you can focus on the excitement of your upcoming adventure.</p>
+            </div>
+            <div class="difference-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                <h3>Experience That Matters</h3>
+                <p>Learn from our travels so you don't have to learn the hard way. We share insider tips, honest recommendations, and the kind of advice that only comes from actually being there.</p>
+            </div>
+            <div class="difference-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <h3>Free. Yes, Really.</h3>
+                <p>Our services cost you nothing extra. We earn commissions from travel partners, which means you get expert planning at the same prices you'd find booking directly online.</p>
+            </div>
+            <div class="difference-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                    </svg>
+                </div>
+                <h3>Structured or Spontaneous</h3>
+                <p>Want every moment planned? We've got you. Prefer to wing it with just the essentials? Perfect. We tailor our approach to match how you actually like to travel.</p>
+            </div>
+            <div class="difference-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <path d="M22 4L12 14.01l-3-3"/>
+                    </svg>
+                </div>
+                <h3>Your Vision, Realized</h3>
+                <p>Tell us your dream vacation—relaxing beach, mountain adventure, cultural immersion, family bonding—and we'll find options that actually match what you're looking for.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="section-header">
+            <span class="section-label">Service Tiers</span>
+            <h2 class="section-title">Choose Your Level of Support</h2>
+            <p class="section-subtitle">From independent explorers to those who want every detail handled, we meet you where you are.</p>
+        </div>
+        <div class="services-wrapper">
+            <!-- DIY Explorer -->
+            <div class="service-tier">
+                <div class="tier-badge">Tier 1</div>
+                <div class="tier-visual">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                </div>
+                <div class="tier-content">
+                    <h3>DIY Explorer</h3>
+                    <p class="tier-tagline">"I know what I want, just help me book it."</p>
+                    <p>You've done your research and know exactly where you want to go. We'll handle the bookings, secure the best rates, and make sure everything is confirmed and ready.</p>
+                    <ul class="tier-features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Professional booking at no extra cost
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Price matching guarantee
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Confirmation documentation
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Quick questions answered
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Guided Adventure -->
+            <div class="service-tier">
+                <div class="tier-badge">Tier 2</div>
+                <div class="tier-visual">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </div>
+                <div class="tier-content">
+                    <h3>Guided Adventure</h3>
+                    <p class="tier-tagline">"I have ideas, but I'd love some expert input."</p>
+                    <p>You know the vibe you're going for but want guidance on destinations, timing, and hidden gems. We'll collaborate with you to shape your perfect trip.</p>
+                    <ul class="tier-features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Everything in DIY Explorer
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Personalized destination recommendations
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Detailed itinerary suggestions
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Insider tips and local secrets
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Budget optimization strategies
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Luxury Concierge -->
+            <div class="service-tier">
+                <div class="tier-badge">Tier 3</div>
+                <div class="tier-visual">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div class="tier-content">
+                    <h3>Luxury Concierge</h3>
+                    <p class="tier-tagline">"Plan everything. I just want to show up and enjoy."</p>
+                    <p>Tell us your dreams and leave the rest to us. We'll craft a complete, customized experience down to restaurant reservations and activity bookings.</p>
+                    <ul class="tier-features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Everything in Guided Adventure
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Complete day-by-day itinerary
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Restaurant and activity reservations
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Transportation coordination
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            24/7 trip support
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                            Custom travel documents package
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="contact-wrapper">
+            <div class="contact-intro">
+                <h2>Tell Us About Your Dream Trip</h2>
+                <p>Share what you're looking for and we'll reach out to start planning your perfect adventure together.</p>
+            </div>
+            <form class="contact-form" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" placeholder="How should we address you?" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number (Optional)</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Service Level</label>
+                        <select id="service" name="service">
+                            <option value="">I'm not sure yet</option>
+                            <option value="diy">DIY Explorer - Just handle my bookings</option>
+                            <option value="guided">Guided Adventure - Help me plan</option>
+                            <option value="luxury">Luxury Concierge - Plan everything</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="destination">Dream Destination(s)</label>
+                        <input type="text" id="destination" name="destination" placeholder="Where do you want to go? Or 'surprise me!'">
+                    </div>
+                    <div class="form-group">
+                        <label for="travelers">Number of Travelers</label>
+                        <input type="text" id="travelers" name="travelers" placeholder="Adults, kids, etc.">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dates">Preferred Travel Dates</label>
+                    <input type="text" id="dates" name="dates" placeholder="Specific dates or 'flexible within March-April'">
+                </div>
+                <div class="dream-prompt">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        Paint Your Perfect Picture
+                    </h4>
+                    <p>What does your ideal vacation look like? Beach relaxation or mountain adventure? Packed itinerary or lazy mornings? Cultural deep-dives or resort comfort? The more you share, the better we can match you.</p>
+                </div>
+                <div class="form-group">
+                    <label for="dreams">Your Travel Dreams & Preferences</label>
+                    <textarea id="dreams" name="dreams" placeholder="Tell us everything! What activities excite you? What's your travel style? Any bucket list experiences? Dietary needs or accessibility considerations? Budget range? We want to know what makes your perfect trip."></textarea>
+                </div>
+                <div class="form-submit">
+                    <button type="submit">
+                        Let's Start Planning
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Tiki <span>Journeys</span></h3>
+                <p>Your adventure deserves more than an algorithm. Let real travel experts who genuinely care help you create memories that last a lifetime.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                            <path d="M17.5 6.5h.01"/>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Email">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <path d="M22 6l-10 7L2 6"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#difference">Why Choose Us</a></li>
+                    <li><a href="#services">Our Services</a></li>
+                    <li><a href="#contact">Get Started</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#services">DIY Explorer</a></li>
+                    <li><a href="#services">Guided Adventure</a></li>
+                    <li><a href="#services">Luxury Concierge</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tiki Journeys LLC. All rights reserved.</p>
+            <p>Crafted with wanderlust in Pittsburgh, PA</p>
+        </div>
+    </footer>
+
+    <script>
+        // Generate starfield
+        function createStars() {
+            const starfield = document.getElementById('starfield');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 2 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starfield.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Here you would typically send this to your backend
+            console.log('Form submitted:', data);
+            
+            // Show success message
+            alert('Thank you for reaching out! We\'ll be in touch soon to start planning your adventure.');
+            this.reset();
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animations
+        document.querySelectorAll('.difference-card, .service-tier').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
