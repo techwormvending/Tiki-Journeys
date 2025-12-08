@@ -95,12 +95,33 @@
         }
 
         .logo-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
             object-fit: cover;
             border: 2px solid var(--wood-glow);
             box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(212, 165, 116, 0.5);
+        }
+
+        .hero-logo {
+            width: 180px;
+            height: auto;
+            border-radius: 20px;
+            border: 3px solid var(--wood-glow);
+            box-shadow: 0 0 50px rgba(212, 165, 116, 0.4), 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out, glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 50px rgba(212, 165, 116, 0.4), 0 20px 40px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 70px rgba(212, 165, 116, 0.6), 0 20px 40px rgba(0, 0, 0, 0.3); }
         }
 
         .logo-text {
@@ -957,6 +978,7 @@
     <section class="hero">
         <div class="hero-bg"></div>
         <div class="hero-content">
+            <img src="logo.jpg" alt="Tiki Journeys - Your Adventure Guide" class="hero-logo">
             <div class="hero-badge">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -1256,6 +1278,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-brand">
+                <img src="logo.jpg" alt="Tiki Journeys" style="width: 80px; height: auto; border-radius: 12px; margin-bottom: 1rem; border: 2px solid var(--wood-glow);">
                 <h3>Tiki <span>Journeys</span></h3>
                 <p>Your adventure deserves more than an algorithm. Let real travel experts who genuinely care help you create memories that last a lifetime.</p>
                 <div class="footer-social">
