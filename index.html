@@ -348,6 +348,11 @@
             50% { transform: translateX(-50%) translateY(10px); }
         }
 
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Section Styling */
         section {
             position: relative;
@@ -1209,7 +1214,7 @@
                 <h2>Tell Us About Your Dream Trip</h2>
                 <p>Share what you're looking for and we'll reach out to start planning your perfect adventure together.</p>
             </div>
-            <form class="contact-form" id="contactForm">
+            <form class="contact-form" id="contactForm" action="https://formspree.io/f/mqezkoqg" method="POST">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="name">Your Name</label>
@@ -1369,20 +1374,23 @@
             });
         });
 
-        // Form submission
+        // Form submission with Formspree
         document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            const form = this;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
             
-            // Get form data
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
+            // Show loading state
+            submitBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                    <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"/>
+                </svg>
+                Sending...
+            `;
+            submitBtn.disabled = true;
             
-            // Here you would typically send this to your backend
-            console.log('Form submitted:', data);
-            
-            // Show success message
-            alert('Thank you for reaching out! We\'ll be in touch soon to start planning your adventure.');
-            this.reset();
+            // Let Formspree handle the submission
+            // The form will submit naturally, but we add a style for the loading state
         });
 
         // Intersection Observer for animations
